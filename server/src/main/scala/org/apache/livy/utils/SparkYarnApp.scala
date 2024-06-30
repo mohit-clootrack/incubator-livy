@@ -323,20 +323,11 @@ class SparkYarnApp private[utils] (
               }
               AppInfo(driverLogUrl, Option(appReport.getTrackingUrl))
             }
-          }
 
-          val latestAppInfo = {
-            val attempt =
-              yarnClient.getApplicationAttemptReport(appReport.getCurrentApplicationAttemptId)
-            val driverLogUrl =
-              Try(yarnClient.getContainerReport(attempt.getAMContainerId).getLogUrl)
-                .toOption
-            AppInfo(driverLogUrl, Option(appReport.getTrackingUrl))
-          }
-
-          if (appInfo != latestAppInfo) {
-            listener.foreach(_.infoChanged(latestAppInfo))
-            appInfo = latestAppInfo
+            if (appInfo != latestAppInfo) {
+              listener.foreach(_.infoChanged(latestAppInfo))
+              appInfo = latestAppInfo
+            }
           }
         } catch {
           // This exception might be thrown during app is starting up. It's transient.
