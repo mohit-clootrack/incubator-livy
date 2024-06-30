@@ -164,6 +164,10 @@ class SparkYarnApp private[utils] (
     }
   }
 
+  private def isProcessAlive(): Boolean = {
+    process.isDefined && process.get.isAlive
+  }
+
   private def isProcessErrExit(): Boolean = {
     process.isDefined && !process.get.isAlive && process.get.exitValue() != 0
   }
