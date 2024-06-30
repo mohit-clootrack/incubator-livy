@@ -830,7 +830,7 @@
             <environmentVariables>
               <LIVY_TEST>true</LIVY_TEST>
               <SPARK_HOME>${spark.home}</SPARK_HOME>
-              <LIVY_SPARK_VERSION>3.5.0</LIVY_SPARK_VERSION>
+              <LIVY_SPARK_VERSION>${spark.version}</LIVY_SPARK_VERSION>
             </environmentVariables>
             <systemProperties>
               <java.awt.headless>true</java.awt.headless>
@@ -858,7 +858,7 @@
               <LIVY_TEST>true</LIVY_TEST>
               <SPARK_HOME>${spark.home}</SPARK_HOME>
               <LIVY_LOG_DIR>${livy.log.dir}</LIVY_LOG_DIR>
-              <LIVY_SPARK_VERSION>3.5.0</LIVY_SPARK_VERSION>
+              <LIVY_SPARK_VERSION>${spark.version}</LIVY_SPARK_VERSION>
               <LIVY_SCALA_VERSION>${scala.binary.version}</LIVY_SCALA_VERSION>
             </environmentVariables>
             <systemProperties>
