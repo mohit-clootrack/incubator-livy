@@ -281,20 +281,42 @@ class SparkYarnApp private[utils] (
       while (isRunning) {
         try {
           Clock.sleep(pollInterval.toMillis)
+          if (!isProcessAlive()) {
+            // Refresh application state
+            val appReport = yarnClient.getApplicationReport(appId)
+            yarnDiagnostics = getYarnDiagnostics(appReport)
 
-          // Refresh application state
-          val appReport = yarnClient.getApplicationReport(appId)
-          yarnDiagnostics = getYarnDiagnostics(appReport)
-          changeState(mapYarnState(
-            appReport.getApplicationId,
-            appReport.getYarnApplicationState,
-            appReport.getFinalApplicationStatus))
+            // figure out the application's actual state and update in a single operation
+            val sessState =
+              if (isProcessErrExit()) {
+                if (killed) {
+                  debug(s"sess state: process killed")
+                  SparkApp.State.KILLED
+                } else {
+                  debug(s"sess state: process err exited")
+                  SparkApp.State.FAILED
+                }
+              }
+              else {
+                val yarnState = mapYarnState(
+                  appReport.getApplicationId,
+                  appReport.getYarnApplicationState,
+                  appReport.getFinalApplicationStatus)
+                debug(s"sess state: yarn=${yarnState}")
+                yarnState
+              }
+            changeState(sessState)
 
-          if (isProcessErrExit()) {
-            if (killed) {
-              changeState(SparkApp.State.KILLED)
-            } else {
-              changeState(SparkApp.State.FAILED)
+            val latestAppInfo = {
+              val attempt =
+                yarnClient.getApplicationAttemptReport(appReport.getCurrentApplicationAttemptId)
+              val driverLogUrl = if (state == SparkApp.State.FINISHED) {
+                None
+              } else {
+                Try(yarnClient.getContainerReport(attempt.getAMContainerId).getLogUrl)
+                  .toOption
+              }
+              AppInfo(driverLogUrl, Option(appReport.getTrackingUrl))
             }
           }
 

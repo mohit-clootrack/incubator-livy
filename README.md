@@ -31,13 +31,15 @@ cd helm/
 helm upgrade --install livy . -n spark
 ```
 
-## Example
-After the pod is launched. It is necessary to organize access to port 8998. It does not matter how it will be done, through the forwarding port or intgerss.
-
 To start a session, you need to send a POST request http://localhost:8998/sessions.
 ```
 # Example
 {"kind": "spark" , "driverMemory": "8g",    "driverCores": 4,    "executorMemory": "4g",     "executorCores": 1,     "numExecutors": 10}
+
+git clone https://github.com/apache/incubator-livy.git
+cd incubator-livy
+docker build -t livy-ci dev/docker/livy-dev-base/
+docker run --rm -it -v $(pwd):/workspace -v $HOME/.m2:/root/.m2 livy-ci mvn package
 ```
 ![scheme](images/livy.png)
 
@@ -50,4 +52,13 @@ To work from Jupyter, you need to create kernels (https://github.com/jupyter-inc
 ![img.png](images/jupyter.png)
 
 
-## This scheme of work is at the testing stage, I am not yet sure about its advantages!
+
+### Build Profiles
+
+| Flag         | Purpose                                                            |
+|--------------|--------------------------------------------------------------------|
+| -Phadoop2    | Choose Hadoop2 based build dependencies (default configuration)    |
+| -Pspark2     | Choose Spark 2.x based build dependencies (default configuration)  |
+| -Pspark3     | Choose Spark 3.x based build dependencies                          |
+| -Pscala-2.11 | Choose Scala 2.11 based build dependencies (default configuration) |        
+| -Pscala-2.12 | Choose scala 2.12 based build dependencies                         |
