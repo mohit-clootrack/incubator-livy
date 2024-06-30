@@ -112,7 +112,7 @@
     <scala-2.12.version>2.12.15</scala-2.12.version>
     <kubernetes.client.version>4.6.4</kubernetes.client.version>
     <scala.binary.version>2.11</scala.binary.version>
-    <scala.version>${scala-2.11.version}</scala.version>
+    <scala.version>2.11</scala.version>
 
     <scalatest.version>3.0.8</scalatest.version>
     <scalatra.version>2.6.5</scalatra.version>
