@@ -126,13 +126,13 @@
     <scala.binary.version>2.11</scala.binary.version>
     <scala.version>2.11.12</scala.version>
     <!-- spark2 -->
-    <spark.version>2.4.5</spark.version>
+    <spark.version>3.5.0</spark.version>
     <java.version>1.8</java.version>
     <py4j.version>0.10.9</py4j.version>
     <json4s.version>3.5.3</json4s.version>
-    <spark.bin.name>spark-${spark.version}-bin-hadoop${hadoop.major-minor.version}</spark.bin.name>
+    <spark.bin.name>spark-3.5.0-bin-hadoop3</spark.bin.name>
     <spark.bin.download.url>
-      https://archive.apache.org/dist/spark/spark-${spark.version}/${spark.bin.name}.tgz
+      https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
     </spark.bin.download.url>
     <spark.bin.name>spark-3.5.0-bin-hadoop3</spark.bin.name>
     <kubernetes.client.version>4.9.2</kubernetes.client.version>
@@ -830,7 +830,7 @@
             <environmentVariables>
               <LIVY_TEST>true</LIVY_TEST>
               <SPARK_HOME>${spark.home}</SPARK_HOME>
-              <LIVY_SPARK_VERSION>${spark.version}</LIVY_SPARK_VERSION>
+              <LIVY_SPARK_VERSION>3.5.0</LIVY_SPARK_VERSION>
             </environmentVariables>
             <systemProperties>
               <java.awt.headless>true</java.awt.headless>
@@ -858,7 +858,7 @@
               <LIVY_TEST>true</LIVY_TEST>
               <SPARK_HOME>${spark.home}</SPARK_HOME>
               <LIVY_LOG_DIR>${livy.log.dir}</LIVY_LOG_DIR>
-              <LIVY_SPARK_VERSION>${spark.version}</LIVY_SPARK_VERSION>
+              <LIVY_SPARK_VERSION>3.5.0</LIVY_SPARK_VERSION>
               <LIVY_SCALA_VERSION>${scala.binary.version}</LIVY_SCALA_VERSION>
             </environmentVariables>
             <systemProperties>
@@ -1227,7 +1227,7 @@
     <profile>
       <id>spark3</id>
       <properties>
-        <spark.version>3.2.3</spark.version>
+        <spark.version>3.5.0</spark.version>
         <java.version>1.8</java.version>
         <py4j.version>0.10.9.7</py4j.version>
         <json4s.version>3.7.0-M11</json4s.version>
