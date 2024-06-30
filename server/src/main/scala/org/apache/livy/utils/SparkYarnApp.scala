@@ -164,10 +164,6 @@ class SparkYarnApp private[utils] (
     }
   }
 
-  private def isProcessAlive(): Boolean = {
-    process.isDefined && process.get.isAlive
-  }
-
   private def isProcessErrExit(): Boolean = {
     process.isDefined && !process.get.isAlive && process.get.exitValue() != 0
   }
@@ -285,7 +281,6 @@ class SparkYarnApp private[utils] (
       while (isRunning) {
         try {
           Clock.sleep(pollInterval.toMillis)
-
           if (!isProcessAlive()) {
             // Refresh application state
             val appReport = yarnClient.getApplicationReport(appId)
@@ -323,11 +318,20 @@ class SparkYarnApp private[utils] (
               }
               AppInfo(driverLogUrl, Option(appReport.getTrackingUrl))
             }
+          }
 
-            if (appInfo != latestAppInfo) {
-              listener.foreach(_.infoChanged(latestAppInfo))
-              appInfo = latestAppInfo
-            }
+          val latestAppInfo = {
+            val attempt =
+              yarnClient.getApplicationAttemptReport(appReport.getCurrentApplicationAttemptId)
+            val driverLogUrl =
+              Try(yarnClient.getContainerReport(attempt.getAMContainerId).getLogUrl)
+                .toOption
+            AppInfo(driverLogUrl, Option(appReport.getTrackingUrl))
+          }
+
+          if (appInfo != latestAppInfo) {
+            listener.foreach(_.infoChanged(latestAppInfo))
+            appInfo = latestAppInfo
           }
         } catch {
           // This exception might be thrown during app is starting up. It's transient.
